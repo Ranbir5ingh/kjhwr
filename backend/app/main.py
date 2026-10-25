@@ -1,4 +1,4 @@
-"""kjhwr API — UK day-ahead wind forecast decision portal (pilot)."""
+"""Updraft API — UK day-ahead wind forecast decision portal (pilot)."""
 from __future__ import annotations
 
 import logging
@@ -14,7 +14,7 @@ from . import analysis, elexon
 from .config import settings
 
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger("kjhwr")
+log = logging.getLogger("updraft")
 
 
 @lru_cache(maxsize=1)
@@ -38,7 +38,7 @@ async def lifespan(_app: FastAPI):
 
 
 app = FastAPI(
-    title="kjhwr — Day-ahead wind decision portal",
+    title="Updraft — Day-ahead wind decision portal",
     version="1.0.0",
     lifespan=lifespan,
 )
@@ -69,7 +69,7 @@ def health() -> dict[str, Any]:
 @app.get("/api/meta")
 def meta() -> dict[str, Any]:
     return {
-        "product": "Day-ahead wind generation decision portal (pilot)",
+        "product": "Updraft — day-ahead wind generation decision portal (pilot)",
         "market": "GB national wind (Elexon BMRS)",
         "datasets": {
             "actuals": "FUELHH fuelType=WIND",

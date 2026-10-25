@@ -1,4 +1,4 @@
-# kjhwr — Day-ahead wind decision portal (pilot)
+# Updraft — Day-ahead wind decision portal (pilot)
 
 A small web app for a **GB energy utility** that buys wholesale day-ahead power.
 It answers two questions for **national wind** (Elexon BMRS only), scoped to
@@ -103,8 +103,8 @@ Re-run anytime via `GET /api/accuracy` after `docker compose up --build`.
 ### Docker Compose (recommended)
 
 ```bash
-git clone <this-repo-url>
-cd kjhwr
+git clone https://github.com/Ranbir5ingh/updraft.git
+cd updraft
 docker compose up --build
 ```
 
@@ -150,7 +150,7 @@ Copy `.env.example` → `.env` for local overrides (`.env` is gitignored).
 ## Repository layout
 
 ```
-kjhwr/
+updraft/
   docker-compose.yml
   README.md
   .env.example
@@ -199,7 +199,7 @@ kjhwr/
 
 | Layer | URL |
 |-------|-----|
-| **UI (Vercel)** | https://kjhwr-two.vercel.app |
+| **UI (Vercel)** | https://updraft-wind.vercel.app (also https://kjhwr-two.vercel.app) |
 | **API (Render)** | https://kjhwr-api.onrender.com |
 | Health | https://kjhwr-api.onrender.com/api/health |
 
@@ -228,7 +228,7 @@ npx vercel --prod --yes \
 - **Build:** `pip install -r requirements.txt`
 - **Start:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 - **Health check:** `/api/health`
-- **Env:** `PYTHON_VERSION=3.12.x`, `CORS_ORIGINS=https://kjhwr-two.vercel.app` (comma-separated)
+- **Env:** `PYTHON_VERSION=3.12.x`, `CORS_ORIGINS=https://updraft-wind.vercel.app,https://kjhwr-two.vercel.app` (comma-separated)
 
 `backend/data/*.json` is in the repo, so the service runs offline against the
 shipped January 2026 cache. Optional live refresh: `POST /api/refresh`.

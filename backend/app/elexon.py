@@ -24,7 +24,7 @@ FORECAST_CACHE = "windfor_jan2026.json"
 
 
 def _headers() -> dict[str, str]:
-    h = {"Accept": "application/json", "User-Agent": "kjhwr/1.0"}
+    h = {"Accept": "application/json", "User-Agent": "updraft/1.0"}
     if settings.elexon_api_key:
         h["Authorization"] = f"Bearer {settings.elexon_api_key}"
     return h

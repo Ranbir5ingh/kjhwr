@@ -129,20 +129,31 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="topbar-left">
-          <div className="brand-mark" aria-hidden="true">
-            k
+        <div className="topbar-inner">
+          <div className="topbar-left">
+            <a className="brand" href="/" aria-label="Updraft home">
+              <span className="brand-mark" aria-hidden="true">
+                <img
+                  src="/updraft-mark.svg"
+                  alt=""
+                  width="28"
+                  height="28"
+                  className="brand-mark-svg"
+                />
+              </span>
+              <span className="brand-text">
+                <strong>Updraft</strong>
+                <em>Day-ahead wind</em>
+              </span>
+            </a>
+            <div className="topbar-context">
+              <span className="topbar-day">{formatLongDay(day)}</span>
+              {dayMeta ? <span className="topbar-meta">{dayMeta}</span> : null}
+            </div>
           </div>
-          <div className="topbar-title">
-            <strong>Day-ahead wind</strong>
-            <span>
-              {formatLongDay(day)}
-              {dayMeta ? ` · ${dayMeta}` : ""}
-            </span>
+          <div className="topbar-right">
+            <span className="scope-chip">Jan 2026 · Elexon WIND</span>
           </div>
-        </div>
-        <div className="topbar-right">
-          <span className="scope-chip">Jan 2026 · Elexon WIND</span>
         </div>
       </header>
 
