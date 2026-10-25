@@ -195,32 +195,49 @@ kjhwr/
 | GET | `/api/accuracy` | Month overall + per-day metrics |
 | POST | `/api/refresh` | Re-download January 2026 sample cache |
 
-## Deploy notes (optional sample)
+## Live demo
+
+| Layer | URL |
+|-------|-----|
+| **UI (Vercel)** | https://kjhwr-two.vercel.app |
+| **API (Render)** | https://kjhwr-api.onrender.com |
+| Health | https://kjhwr-api.onrender.com/api/health |
+
+The UI is built with `VITE_API_BASE=https://kjhwr-api.onrender.com`. The API
+ships the January 2026 sample cache, so demos need **no Elexon key**. Free-tier
+Render services may sleep after idle; the first request can take ~30–60s to wake.
+
+## Deploy notes
 
 ### Frontend on Vercel
 
 1. Root directory: `frontend/`
 2. Build: `npm run build` · output: `dist`
-3. Set `VITE_API_BASE` to your public API origin (no trailing slash)
+3. Set build env `VITE_API_BASE` to the public API origin (no trailing slash)
 4. Redeploy after changing `VITE_API_BASE` (baked in at build time)
 
-### API on Heroku (or similar)
-
 ```bash
-heroku container:push web -a <app>
-heroku container:release web -a <app>
+cd frontend
+npx vercel --prod --yes \
+  --build-env VITE_API_BASE=https://kjhwr-api.onrender.com
 ```
 
-Or from `backend/` with the included Procfile:
+### API on Render (Python free web service)
+
+- **Repo:** this GitHub repo · **branch:** `main` · **root dir:** `backend`
+- **Build:** `pip install -r requirements.txt`
+- **Start:** `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+- **Health check:** `/api/health`
+- **Env:** `PYTHON_VERSION=3.12.x`, `CORS_ORIGINS=https://kjhwr-two.vercel.app` (comma-separated)
+
+`backend/data/*.json` is in the repo, so the service runs offline against the
+shipped January 2026 cache. Optional live refresh: `POST /api/refresh`.
+
+Procfile (also used locally / other PaaS):
 
 ```
 web: uvicorn app.main:app --host 0.0.0.0 --port $PORT
 ```
-
-Ship `backend/data/*.json` in the slug so the app works without a live Elexon call.
-Set `CORS_ORIGINS` to your Vercel domain.
-
-Sample demo URL: _(add after you deploy)_
 
 ## AI tools disclosure
 

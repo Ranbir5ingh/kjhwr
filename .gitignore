@@ -31,3 +31,7 @@ Thumbs.db
 
 # Docker / local overrides
 docker-compose.override.yml
+
+# Vercel
+.vercel/
+frontend/.vercel/
