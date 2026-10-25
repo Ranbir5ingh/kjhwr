@@ -91,7 +91,7 @@ export default function DecisionChart({ points, day, fading = false }) {
           <ResponsiveContainer>
             <ComposedChart
               data={data}
-              margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+              margin={{ top: 8, right: 4, left: -8, bottom: 0 }}
             >
               <CartesianGrid
                 stroke="#e4e1da"
@@ -101,17 +101,18 @@ export default function DecisionChart({ points, day, fading = false }) {
               <XAxis
                 dataKey="label"
                 stroke="#a8a29e"
-                tick={{ fill: "#78716c", fontSize: 11 }}
+                tick={{ fill: "#78716c", fontSize: 10 }}
                 tickLine={false}
                 axisLine={{ stroke: "#e4e1da" }}
                 interval="preserveStartEnd"
+                minTickGap={28}
               />
               <YAxis
                 stroke="#a8a29e"
-                tick={{ fill: "#78716c", fontSize: 11 }}
+                tick={{ fill: "#78716c", fontSize: 10 }}
                 tickLine={false}
                 axisLine={false}
-                width={58}
+                width={46}
                 tickFormatter={(v) =>
                   v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v)
                 }
