@@ -1,30 +1,52 @@
-export default function MetricCards({ metrics, title }) {
-  if (!metrics) return null;
+export default function MetricCards({ metrics, title, compact = false }) {
+  if (!metrics) {
+    return (
+      <div className="card">
+        {title && <h2>{title}</h2>}
+        <p className="muted">No metrics available.</p>
+      </div>
+    );
+  }
+
   const items = [
-    { key: "maeMw", label: "MAE (MW)" },
-    { key: "rmseMw", label: "RMSE (MW)" },
-    { key: "biasMw", label: "Bias (MW)" },
-    { key: "mapePct", label: "MAPE (%)" },
-    { key: "n", label: "Points" },
+    { key: "maeMw", label: "MAE", unit: "MW" },
+    { key: "rmseMw", label: "RMSE", unit: "MW" },
+    { key: "biasMw", label: "Bias", unit: "MW" },
+    { key: "mapePct", label: "MAPE", unit: "%" },
+    { key: "n", label: "Points", unit: "" },
   ];
+
+  const formatValue = (key, value) => {
+    if (value === null || value === undefined) return "—";
+    if (key === "n") return Number(value).toLocaleString();
+    if (typeof value === "number") {
+      return value.toLocaleString(undefined, {
+        maximumFractionDigits: key === "mapePct" ? 1 : 0,
+      });
+    }
+    return String(value);
+  };
+
   return (
     <div className="card">
-      <h2>{title}</h2>
+      {title && <h2>{title}</h2>}
       <div className="metrics">
-        {items.map(({ key, label }) => (
+        {items.map(({ key, label, unit }) => (
           <div className="metric" key={key}>
-            <div className="label">{label}</div>
-            <div className="value">
-              {metrics[key] === null || metrics[key] === undefined
-                ? "—"
-                : metrics[key]}
+            <div className="label">
+              {label}
+              {unit ? ` (${unit})` : ""}
             </div>
+            <div className="value">{formatValue(key, metrics[key])}</div>
           </div>
         ))}
       </div>
-      <p className="muted" style={{ marginTop: 10 }}>
-        Bias = forecast − actual (positive means over-forecast). MAE/RMSE in MW.
-      </p>
+      {!compact && (
+        <p className="metric-footnote">
+          Bias = forecast − actual (positive means over-forecast). MAE and RMSE
+          in MW.
+        </p>
+      )}
     </div>
   );
 }
