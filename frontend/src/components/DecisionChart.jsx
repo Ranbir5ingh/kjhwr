@@ -24,75 +24,94 @@ function CustomTooltip({ active, payload }) {
   return (
     <div
       style={{
-        background: "#ffffff",
-        border: "1px solid #e2e8f0",
+        background: "#fffcf7",
+        border: "1px solid #e4e1da",
         borderRadius: 8,
         padding: "10px 12px",
-        boxShadow: "0 4px 16px rgba(15,23,42,0.08)",
+        boxShadow: "0 8px 24px rgba(28,25,23,0.08)",
         fontSize: 12,
-        color: "#334155",
+        color: "#44403c",
+        fontFamily: '"Instrument Sans", system-ui, sans-serif',
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 6, color: "#0f172a" }}>
+      <div
+        style={{
+          fontWeight: 600,
+          marginBottom: 6,
+          color: "#1c1917",
+          fontVariantNumeric: "tabular-nums",
+        }}
+      >
         {row?.startTime?.replace("T", " ").replace("Z", " UTC") || ""}
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
         <span>
-          <span style={{ color: "#0f766e" }}>●</span> Forecast{" "}
-          {formatMw(row?.forecastMw)}
+          <span style={{ color: "#c2410c" }}>●</span> Forecast{" "}
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
+            {formatMw(row?.forecastMw)}
+          </span>
         </span>
         <span>
-          <span style={{ color: "#475569" }}>●</span> Actual{" "}
-          {formatMw(row?.actualMw)}
+          <span style={{ color: "#44403c" }}>●</span> Actual{" "}
+          <span style={{ fontFamily: '"IBM Plex Mono", monospace' }}>
+            {formatMw(row?.actualMw)}
+          </span>
         </span>
       </div>
     </div>
   );
 }
 
-export default function DecisionChart({ points, day }) {
+export default function DecisionChart({ points, day, fading = false }) {
   const data = (points || []).map((p) => ({
     ...p,
     label: tick(p.startTime),
   }));
 
   return (
-    <div className="card">
-      <h2>Forecast at decision time vs actuals{day ? ` · ${day}` : ""}</h2>
-      <div className="chart-legend-hint">
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Forecast vs outturn</h2>
+        {day && <span className="sub">{day}</span>}
+      </div>
+      <div className="chart-legend">
         <span className="legend-item">
           <span className="legend-swatch forecast" />
-          Forecast (MW)
+          Forecast at decision
         </span>
         <span className="legend-item">
           <span className="legend-swatch actual" />
-          Actual (MW)
+          Actual generation
         </span>
       </div>
       {!data.length ? (
-        <div className="empty-chart">No points for this delivery day</div>
+        <div className="empty-chart">No settlement periods for this day</div>
       ) : (
-        <div className="chart-wrap">
+        <div className={`chart-stage${fading ? " is-fading" : ""}`}>
           <ResponsiveContainer>
             <ComposedChart
               data={data}
               margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
             >
-              <CartesianGrid stroke="#e2e8f0" strokeDasharray="4 4" vertical={false} />
+              <CartesianGrid
+                stroke="#e4e1da"
+                strokeDasharray="3 6"
+                vertical={false}
+              />
               <XAxis
                 dataKey="label"
-                stroke="#94a3b8"
-                tick={{ fill: "#64748b", fontSize: 11 }}
+                stroke="#a8a29e"
+                tick={{ fill: "#78716c", fontSize: 11 }}
                 tickLine={false}
-                axisLine={{ stroke: "#e2e8f0" }}
+                axisLine={{ stroke: "#e4e1da" }}
                 interval="preserveStartEnd"
               />
               <YAxis
-                stroke="#94a3b8"
-                tick={{ fill: "#64748b", fontSize: 11 }}
+                stroke="#a8a29e"
+                tick={{ fill: "#78716c", fontSize: 11 }}
                 tickLine={false}
                 axisLine={false}
-                width={64}
+                width={58}
                 tickFormatter={(v) =>
                   v >= 1000 ? `${(v / 1000).toFixed(1)}k` : String(v)
                 }
@@ -102,20 +121,26 @@ export default function DecisionChart({ points, day }) {
                 type="monotone"
                 dataKey="forecastMw"
                 name="Forecast"
-                stroke="#0f766e"
+                stroke="#c2410c"
                 strokeWidth={2.25}
                 dot={false}
-                activeDot={{ r: 4, strokeWidth: 0 }}
+                activeDot={{ r: 4, strokeWidth: 0, fill: "#c2410c" }}
+                isAnimationActive={!fading}
+                animationDuration={420}
+                animationEasing="ease-out"
               />
               <Line
                 type="monotone"
                 dataKey="actualMw"
                 name="Actual"
-                stroke="#475569"
-                strokeWidth={2.25}
+                stroke="#44403c"
+                strokeWidth={2}
                 strokeDasharray="5 4"
                 dot={false}
-                activeDot={{ r: 4, strokeWidth: 0 }}
+                activeDot={{ r: 4, strokeWidth: 0, fill: "#44403c" }}
+                isAnimationActive={!fading}
+                animationDuration={420}
+                animationEasing="ease-out"
               />
             </ComposedChart>
           </ResponsiveContainer>

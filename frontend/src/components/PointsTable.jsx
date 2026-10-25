@@ -1,12 +1,15 @@
 export default function PointsTable({ points }) {
   return (
-    <div className="card">
-      <h2>Hourly detail · forecast vs actual</h2>
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Settlement periods</h2>
+        <span className="sub">MW · UTC</span>
+      </div>
       <div className="table-scroll" style={{ maxHeight: 360 }}>
         <table>
           <thead>
             <tr>
-              <th>Start (UTC)</th>
+              <th>Start</th>
               <th className="num">Forecast</th>
               <th className="num">Actual</th>
               <th className="num">Error</th>
@@ -20,7 +23,7 @@ export default function PointsTable({ points }) {
                 v == null ? "—" : Math.round(Number(v)).toLocaleString();
               return (
                 <tr key={p.startTime}>
-                  <td style={{ fontVariantNumeric: "tabular-nums" }}>
+                  <td className="mono">
                     {p.startTime.replace("T", " ").replace("Z", "")}
                   </td>
                   <td className="num">{fmt(p.forecastMw)}</td>
@@ -32,7 +35,7 @@ export default function PointsTable({ points }) {
             {!(points || []).length && (
               <tr>
                 <td colSpan={4} className="muted" style={{ textAlign: "center" }}>
-                  No hourly points
+                  No periods for this day
                 </td>
               </tr>
             )}

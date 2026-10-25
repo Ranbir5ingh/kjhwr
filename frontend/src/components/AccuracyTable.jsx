@@ -1,7 +1,10 @@
 export default function AccuracyTable({ days, selectedDay, onSelectDay }) {
   return (
-    <div className="card">
-      <h2>Daily accuracy · January 2026</h2>
+    <div className="panel">
+      <div className="panel-head">
+        <h2>Daily accuracy</h2>
+        <span className="sub">Click a row to jump</span>
+      </div>
       <div className="table-scroll">
         <table>
           <thead>
@@ -11,7 +14,7 @@ export default function AccuracyTable({ days, selectedDay, onSelectDay }) {
               <th className="num">MAE</th>
               <th className="num">RMSE</th>
               <th className="num">Bias</th>
-              <th className="num">MAPE %</th>
+              <th className="num">MAPE</th>
             </tr>
           </thead>
           <tbody>
@@ -23,21 +26,11 @@ export default function AccuracyTable({ days, selectedDay, onSelectDay }) {
               return (
                 <tr
                   key={d.deliveryDay}
+                  className={`is-interactive${isActive ? " is-selected" : ""}`}
                   onClick={() => onSelectDay?.(d.deliveryDay)}
-                  style={{
-                    cursor: onSelectDay ? "pointer" : "default",
-                    background: isActive ? "#f0fdfa" : undefined,
-                  }}
                 >
-                  <td
-                    style={{
-                      fontWeight: isActive ? 600 : 500,
-                      color: isActive ? "#0f766e" : undefined,
-                    }}
-                  >
-                    {d.deliveryDay}
-                  </td>
-                  <td className="muted" style={{ fontSize: "0.78rem" }}>
+                  <td>{d.deliveryDay}</td>
+                  <td className="mono muted">
                     {d.forecastPublishTime
                       ? d.forecastPublishTime
                           .replace("T", " ")
@@ -47,7 +40,9 @@ export default function AccuracyTable({ days, selectedDay, onSelectDay }) {
                   <td className="num">{m.maeMw ?? "—"}</td>
                   <td className="num">{m.rmseMw ?? "—"}</td>
                   <td className={`num ${biasClass}`}>{m.biasMw ?? "—"}</td>
-                  <td className="num">{m.mapePct ?? "—"}</td>
+                  <td className="num">
+                    {m.mapePct != null ? `${m.mapePct}` : "—"}
+                  </td>
                 </tr>
               );
             })}
