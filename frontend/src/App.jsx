@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "./api/client.js";
 import DecisionChart from "./components/DecisionChart.jsx";
 import MetricCards from "./components/MetricCards.jsx";
-import AccuracyTable from "./components/AccuracyTable.jsx";
-import PointsTable from "./components/PointsTable.jsx";
+import PeriodHeatmap from "./components/PeriodHeatmap.jsx";
+import DayRankList from "./components/DayRankList.jsx";
 import DayScrubber from "./components/DayScrubber.jsx";
 
 function formatUtc(iso) {
@@ -33,7 +33,15 @@ export default function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [chartFading, setChartFading] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const fadeTimer = useRef(null);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 4);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -128,7 +136,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <header className="topbar">
+      <header className={`topbar${scrolled ? " is-scrolled" : ""}`}>
         <div className="topbar-inner">
           <div className="topbar-left">
             <a className="brand" href="/" aria-label="Updraft home">
@@ -146,13 +154,9 @@ export default function App() {
                 <em>Day-ahead wind</em>
               </span>
             </a>
-            <div className="topbar-context">
-              <span className="topbar-day">{formatLongDay(day)}</span>
-              {dayMeta ? <span className="topbar-meta">{dayMeta}</span> : null}
-            </div>
           </div>
           <div className="topbar-right">
-            <span className="scope-chip">Jan 2026 · Elexon WIND</span>
+            <span className="scope-chip">Jan 2026 · Elexon</span>
           </div>
         </div>
       </header>
@@ -209,8 +213,8 @@ export default function App() {
       </section>
 
       <section className="tables">
-        <PointsTable points={decision?.points} />
-        <AccuracyTable
+        <PeriodHeatmap points={decision?.points} />
+        <DayRankList
           days={accuracy?.days}
           selectedDay={day}
           onSelectDay={selectDay}
